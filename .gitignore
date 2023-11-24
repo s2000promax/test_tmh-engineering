@@ -1,0 +1,40 @@
+.idea
+/node_modules
+
+/client/node_modules
+/client/build
+/client/dist
+/client/.vscode
+/client/.env
+
+# Compiled output
+/client/tmp
+/client/out-tsc
+/client/bazel-out
+
+# Miscellaneous
+/client/.angular
+/client/.angular/cache
+/client.sass-cache/
+/client/connect.lock
+/client/coverage
+/client/libpeerconnection.log
+/client/testem.log
+/client/typings
+
+# System files
+/client/.DS_Store
+/client/Thumbs.db
+
+/server/node_modules
+/server/build
+/server/dist
+/server/.env
+/server/prisma/docker/postgres/.env
+/server/docker/postgres/.env
+
+/database/node_modules
+/database/build
+/database/dist
+/database/.env
+/database/docker/.env
