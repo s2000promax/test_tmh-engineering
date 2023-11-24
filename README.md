@@ -1,9 +1,11 @@
-## Build project
+## Деплой проекта
 
-## Run project
+## Сборка проекта
+  npm install
+
+## Запуск проекта в режиме Разработки 
+  npm run start:dev
 
 ## Project Architecture
-- Documentation for Client side [Client](/client/README.md)
-- Documentation for Server side [Server](/server/README.md)
-
-## Tests
+  - Документация для клиентской части [Client](/client/README.md)
+  - Документация для серверной части [Server](/server/README.md)
