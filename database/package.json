@@ -1,0 +1,12 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "description": "Postgresql Server Deployment with Docker",
+  "scripts": {
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down"
+},
+  "keywords": ["Docker", "postgreSQL"],
+  "author": "Stan <s2000promax@gmail.com>",
+  "license": "ISC"
+}
