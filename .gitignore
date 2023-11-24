@@ -30,7 +30,7 @@
 /server/build
 /server/dist
 /server/.env
-/server/prisma/docker/postgres/.env
+/server/config/prisma/docker/postgres/.env
 /server/docker/postgres/.env
 
 /database/node_modules

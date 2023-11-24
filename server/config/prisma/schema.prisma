@@ -1,0 +1,40 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("VERCEL_DATABASE_URL")
+}
+
+model User {
+  id              String     @id @default(uuid())
+  email           String     @unique
+  password        String?
+  provider        String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  roles           RoleEnum[]
+  Token           Token[]
+  isUserBlocked   Boolean    @default(false)
+  isUserConfirmed Boolean    @default(false)
+
+  @@map("users")
+}
+
+model Token {
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  token     String   @unique
+  expired   DateTime
+  userAgent String
+
+  @@map("tokens")
+}
+
+enum RoleEnum {
+  SA
+  ADMIN
+  USER
+}

@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: Сервер Веб-приложения для управления задачами
+  description: Описание сервера, базирующегося на спецификации OpenAPI 3.0.
+  contact:
+    email: s2000promax@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: http://localhost:8002
+tags:
+  - name: auth
+    description: Операции по авторизации на сервере
+  - name: user
+    description: Операции с пользователем
+paths:
+  /user:
+    get:
+      tags:
+        - user
+      summary: Операции с пользователем
+      description: Получить информацию о конкретном пользователе
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Пользователь не найден
+      security:
+        - cookieAuth: []
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор пользователя
+        name:
+          type: string
+          description: Имя пользователя
+        email:
+          type: string
+          description: Адрес электронной почты пользователя
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: refresh_token

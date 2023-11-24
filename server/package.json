@@ -4,8 +4,10 @@
   "description": "",
   "main": "src/main.ts",
   "scripts": {
+    "prisma:generate": "npx prisma generate --schema=./config/prisma/schema.prisma",
+    "prisma:migrate": "npx prisma migrate dev --schema=./config/prisma/schema.prisma",
     "build": "nest build",
-    "vercel-build": "npx prisma generate && nest build",
+    "vercel-build": "npx config/prisma generate --schema=./config/prisma/schema.prisma && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -22,6 +24,7 @@
   "author": "Stan <s2000promax@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.405.0",
     "@nestjs/axios": "^3.0.1",
     "@nestjs/cache-manager": "^2.1.1",
     "@nestjs/common": "^10.0.0",
