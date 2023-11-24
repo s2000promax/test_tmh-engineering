@@ -1,7 +1,7 @@
 {
-  "name": "DocInfoAM-MVP",
+  "name": "TaskManager-MVP",
   "version": "1.0.0",
-  "description": "Service for doctors clinics booking",
+  "description": "Вэб-приложение для управления задачами",
   "scripts": {
     "prepare": "npx husky install",
     "start:dev": "concurrently \"npm --prefix server run start:dev\" \"npm --prefix client run start:dev\"",
