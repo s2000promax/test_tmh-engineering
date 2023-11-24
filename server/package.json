@@ -7,7 +7,7 @@
     "prisma:generate": "npx prisma generate --schema=./config/prisma/schema.prisma",
     "prisma:migrate": "npx prisma migrate dev --schema=./config/prisma/schema.prisma",
     "build": "nest build",
-    "vercel-build": "npx config/prisma generate && nest build",
+    "vercel-build": "npx prisma generate --schema=./config/prisma/schema.prisma && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
