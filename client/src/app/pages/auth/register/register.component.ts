@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
             this.userService.setCurrentUserData(user);
 
-            this.router.navigate(['tasks']);
+            this.router.navigate(['profile']);
           },
           error: (err) => {
             this.submitted = false;

@@ -1,0 +1,23 @@
+.user-profile-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.left-column, .right-column {
+  flex: 1;
+}
+
+.avatar-wrapper {
+
+}
+
+@media (max-width: 768px) {
+  .user-profile-content {
+    flex-direction: column;
+  }
+
+  .left-column, .right-column {
+    width: 100%;
+  }
+}
