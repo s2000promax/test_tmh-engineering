@@ -1,1 +1,30 @@
-<p>login works!</p>
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <h2>Вход в систему</h2>
+      <div>
+        <p class="mat-body-2">
+          У вас ещё нет аккаунта?
+          <a routerLink="/auth/register" class="mat-caption">Зарегистрироваться</a>
+        </p>
+      </div>
+      <mat-error *ngIf="!!error">
+        {{ error }}
+      </mat-error>
+      <mat-form-field>
+        <input matInput placeholder="Электронная почта" formControlName="email" name="email" required>
+        <mat-error>
+          Пожалуйста, введите действующий адрес электронной почты
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="password" placeholder="Пароль" formControlName="password" name="password" required>
+        <mat-error>
+          Пожалуйста, введите действительный пароль
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button [color]="defaultColor" [disabled]="!loginForm.valid || submitted">Войти</button>
+    </form>
+    <mat-progress-bar *ngIf="submitted" mode="buffer"></mat-progress-bar>
+  </mat-card-content>
+</mat-card>

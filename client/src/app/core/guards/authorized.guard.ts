@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { map, take } from 'rxjs';
-import { UserService } from '../services/user.service';
+import { UserService } from '../services/user/user.service';
 
 export const authorizedGuard: (checkAuthorized?: boolean) => CanActivateFn = (
   checkAuthorized: boolean = true,

@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-export type Form<T> = {
+export type BaseForm<T> = {
   [P in keyof T]: T[P] extends object
-    ? FormGroup<Form<T[P]>>
+    ? FormGroup<BaseForm<T[P]>>
     : FormControl<T[P]>;
 };
