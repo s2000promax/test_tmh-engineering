@@ -1,0 +1,30 @@
+<mat-card class="user-profile-card">
+  <div class="user-profile-content">
+    <div class="left-column">
+      <div class="avatar-wrapper">
+        <img src="./assets/user/profile/photo.png" alt="avatar" class="avatar-img">
+        <!-- Драг-энд-дроп загрузка изображения (показывается при редактировании) -->
+      </div>
+      <p class="email">user@example.com</p>
+      <p class="name">Имя: <span *ngIf="!editMode">{{ user.firstName }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="user.firstName">
+      </p>
+      <p class="surname">Фамилия: <span *ngIf="!editMode">{{ user.lastName }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="user.lastName">
+      </p>
+      <mat-chip-listbox>
+        <!-- Чипы ролей -->
+      </mat-chip-listbox>
+      <button mat-button (click)="editMode = !editMode">Редактировать</button>
+    </div>
+    <div class="right-column">
+      <h1>Список моих задач</h1>
+      <ul>
+        <li><h1>Задача 1</h1></li>
+        <li><h1>Задача 2</h1></li>
+        <li><h1>Задача 3</h1></li>
+        <li><h1>Задача 4</h1></li>
+      </ul>
+    </div>
+  </div>
+</mat-card>

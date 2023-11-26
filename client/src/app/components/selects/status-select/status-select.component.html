@@ -1,0 +1,8 @@
+<mat-form-field [formGroup]="statusSelectForm">
+  <mat-label>Статус задачи</mat-label>
+  <mat-select formControlName="status">
+    <mat-option *ngFor="let status of statuses" [value]="status.value">
+      {{ status.viewValue }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,16 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-items {
+  display: flex;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+.nav-items-mobile {
+  display: flex;
+  flex-direction: column;
+}
