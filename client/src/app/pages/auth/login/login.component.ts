@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
             this.userService.setCurrentUserData(user);
 
-            this.router.navigate(['tasks']);
+            this.router.navigate(['tasks', 'list']);
           },
           error: (err) => {
             this.submitted = false;

@@ -14,10 +14,10 @@ export const authorizedGuard: (checkAuthorized?: boolean) => CanActivateFn = (
       take(1),
       map((user) => {
         if (checkAuthorized) {
-          return !!user ? true : router.parseUrl('/profile/default');
-          // return !!user ? true : router.parseUrl('/auth/login');
+          return !!user ? true : router.parseUrl('/auth/login');
         } else {
-          return !user ? true : router.parseUrl('/tasks');
+          return true;
+          // return !user ? true : router.parseUrl('/tasks/list');
         }
       }),
     );

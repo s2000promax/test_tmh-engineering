@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TasksComponent } from '@pages/tasks/tasks.component';
+import { authorizedGuard } from '../../core/guards/authorized.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: TasksComponent,
     children: [
-      /*
       {
         path: '',
         redirectTo: 'list',
@@ -16,25 +16,20 @@ const routes: Routes = [
       {
         path: 'list',
         loadComponent: () =>
-          import(
-            '../../products/components/product-list/product-list.component'
-          ).then((c) => c.ProductListComponent),
+          import('./list/list.component').then((c) => c.ListComponent),
       },
       {
         path: 'create',
         loadComponent: () =>
-          import(
-            '../../products/components/product-create/product-create.component'
-          ).then((c) => c.ProductCreateComponent),
+          import('./create/create.component').then((c) => c.CreateComponent),
+        canActivate: [authorizedGuard(true)],
       },
       {
         path: 'edit/:id',
         loadComponent: () =>
-          import(
-            '../../products/components/product-edit/product-edit.component'
-          ).then((c) => c.ProductEditComponent),
+          import('./edit/edit.component').then((c) => c.EditComponent),
+        canActivate: [authorizedGuard(true)],
       },
-      */
     ],
   },
 ];

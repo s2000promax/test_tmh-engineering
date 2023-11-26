@@ -14,13 +14,13 @@ const routes: Routes = [
     path: 'tasks',
     loadChildren: () =>
       import('./pages/tasks/tasks.module').then((m) => m.TasksModule),
-    canActivate: [authorizedGuard(true)],
+    canActivate: [authorizedGuard(false)],
   },
   {
     path: 'profile',
     loadChildren: () =>
       import('./pages/profile/profile.module').then((m) => m.ProfileModule),
-    canActivate: [authorizedGuard(false)],
+    canActivate: [authorizedGuard(true)],
   },
 ];
 
