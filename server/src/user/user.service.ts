@@ -9,11 +9,12 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RoleEnum, User } from '@prisma/client';
+import { Profile, RoleEnum, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { Cache } from 'cache-manager';
 import { JwtPayloadDto } from '../../config/dto';
+import { UserProfileDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -119,6 +120,30 @@ export class UserService {
         this.logger.error(e);
         return null;
       });
+  }
+
+  async updateProfile(
+    userProfile: UserProfileDto,
+    currentUser: JwtPayloadDto,
+  ): Promise<Profile> {
+    if (
+      userProfile.userId !== currentUser.id &&
+      !this.isUserAdmin(currentUser.roles)
+    ) {
+      throw new ForbiddenException();
+    }
+
+    const updatedProfile = await this.prismaService.profile.update({
+      where: {
+        userId: userProfile.userId,
+      },
+      data: {
+        fullName: userProfile.fullName,
+        avatar: userProfile.avatar,
+      },
+    });
+
+    return updatedProfile;
   }
 
   async update(user: Partial<User>, currentUser: JwtPayloadDto) {
