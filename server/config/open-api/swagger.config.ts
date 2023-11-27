@@ -22,6 +22,7 @@ export function setupSwagger(app: INestApplication) {
     .addServer(process.env.VERCEL_LOCAL_SERVER_ADDRESS)
     .addTag('status', 'Конечная точка проверки состояния сервера')
     .addTag('auth', 'Конечная точка для операций авторизации')
+    .addTag('task', 'Конечная точка для операций с задачей')
     .addTag('user', 'Конечная точка для операций с пользователем')
     .addTag('tags', 'Конечная точка для операций с тегами')
     .addTag('upload', 'Конечная точка для операций с загрузкой файлов')
