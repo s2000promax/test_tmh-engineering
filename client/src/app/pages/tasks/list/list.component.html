@@ -1,1 +1,22 @@
-<p>list works!</p>
+<div *ngFor="let task of taskService.taskList$ | async">
+  <mat-card [routerLink]="['/tasks', 'edit', task.id]">
+    <mat-card-title>{{ task.title }}</mat-card-title>
+    <mat-card-content>
+      <p>{{ task.description }}</p>
+      <p>Срок: {{ task.dueDate | date }}</p>
+      <p>Статус: {{ task.status }}</p>
+      <p>Категория: {{ task.category || 'Не указана' }}</p>
+    </mat-card-content>
+    <mat-card-footer>
+      <div class="footer-content">
+        <img *ngIf="task.ownerProfile?.avatar; else defaultAvatar" [src]="task.ownerProfile.avatar" alt="avatar"
+             class="avatar">
+        <ng-template #defaultAvatar>
+          <mat-icon>person</mat-icon>
+        </ng-template>
+        <span>{{ task.ownerProfile.fullName }}</span>
+        <span>Создано: {{ task.createdAt | date }}</span>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>

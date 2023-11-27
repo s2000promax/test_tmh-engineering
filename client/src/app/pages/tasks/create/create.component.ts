@@ -97,6 +97,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       const data: Partial<ITask> = {
         ...this.taskForm.getRawValue(),
         status: StatusEnum.NEW,
+        attachments: [],
         ownerId: this.userService.currentUser.value?.id,
       };
 

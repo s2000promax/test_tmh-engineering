@@ -1,39 +1,41 @@
-import { Public } from '../../libs/decorators';
+import { CurrentUser, Public } from '../../libs/decorators';
 import {
   BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
+  Put,
   Res,
   UseInterceptors,
 } from '@nestjs/common';
 
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiConflictResponse,
+  ApiCookieAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ResponseErrorMessageDto } from '../../config/dto';
+import { JwtPayloadDto, ResponseErrorMessageDto } from '../../config/dto';
 import { TaskService } from './task.service';
 import { TaskResponseDto } from './dto';
-import { UserResponseDto } from '../user/dto';
-import {
-  AccessTokenResponseDto,
-  LoginDto,
-  MessageResponseDto,
-  RegisterDto,
-} from '../auth/dto';
+import { UserProfileDto } from '../user/dto';
+import { MessageResponseDto } from '../auth/dto';
 import { Response } from 'express';
-import { UserAgent } from '../auth/decorators';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { CookiesEnum } from '../../config/enums/cookies.enum';
+import { Task } from '@prisma/client';
 
 @ApiTags('task')
 @Controller('task')
@@ -101,7 +103,7 @@ export class TaskController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('create')
-  async register(@Body() dto: CreateTaskDto, @Res() res: Response) {
+  async createTask(@Body() dto: CreateTaskDto, @Res() res: Response) {
     const task = await this.taskService.createTask(dto);
 
     if (!task) {
@@ -109,5 +111,74 @@ export class TaskController {
     }
 
     res.status(HttpStatus.CREATED).json({ message: 'Задание успешно создано' });
+  }
+
+  @ApiOperation({ summary: 'Обновление задания' })
+  @ApiBody({
+    type: UserProfileDto,
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    description: 'Задание было успешно обновлено',
+    type: MessageResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Не авторизирован',
+    type: ResponseErrorMessageDto,
+  })
+  @ApiForbiddenResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Запрещено',
+    type: ResponseErrorMessageDto,
+  })
+  @ApiBadRequestResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Неверный запрос',
+    type: ResponseErrorMessageDto,
+  })
+  @ApiCookieAuth(CookiesEnum.REFRESH_TOKEN)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Put()
+  async updateTask(
+    @Body() body: Task,
+    @CurrentUser() currentUser: JwtPayloadDto,
+    @Res() res: Response,
+  ) {
+    await this.taskService.updateTask(body, currentUser);
+
+    res.status(HttpStatus.OK).json({ message: 'Задание успешно обновлено' });
+  }
+
+  @ApiOperation({ summary: 'Удалить задание по ID' })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    description: 'Задание успешно удалено',
+  })
+  @ApiForbiddenResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Запрещенное исключение',
+    type: ResponseErrorMessageDto,
+  })
+  @ApiUnauthorizedResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Не авторизирован',
+    type: ResponseErrorMessageDto,
+  })
+  @ApiBadRequestResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Неверный запрос',
+    type: ResponseErrorMessageDto,
+  })
+  @ApiCookieAuth(CookiesEnum.REFRESH_TOKEN)
+  @Delete(':id')
+  async deleteTask(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() currentUser: JwtPayloadDto,
+    @Res() res: Response,
+  ) {
+    await this.taskService.deleteTask(id, currentUser);
+
+    res.status(HttpStatus.OK).json({ message: 'Задание успешно удалено' });
   }
 }
