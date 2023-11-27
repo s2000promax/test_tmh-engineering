@@ -9,14 +9,14 @@ export class UserResponseDto implements User {
   @ApiProperty()
   email: string;
 
-  @ApiProperty()
-  phone: string;
-
   @Exclude()
   password: string;
 
   @ApiProperty()
   createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 
   @ApiProperty()
   provider: string;
@@ -26,15 +26,6 @@ export class UserResponseDto implements User {
 
   @ApiProperty()
   isUserConfirmed: boolean;
-
-  @ApiProperty()
-  isUserEmailConfirmed: boolean;
-
-  @ApiProperty()
-  isUserPhoneConfirmed: boolean;
-
-  @ApiProperty()
-  updatedAt: Date;
 
   @ApiProperty({
     isArray: true,

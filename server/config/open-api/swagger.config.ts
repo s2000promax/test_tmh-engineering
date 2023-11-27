@@ -5,7 +5,9 @@ import { CookiesEnum } from '../enums/cookies.enum';
 export function setupSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
     .setTitle('Сервер Веб-приложения для управления задачами')
-    .setDescription('Описание сервера, базирующегося на спецификации OpenAPI 3.0.')
+    .setDescription(
+      'Описание сервера, базирующегося на спецификации OpenAPI 3.0.',
+    )
     .addCookieAuth(
       'authCookie',
       {
@@ -20,7 +22,9 @@ export function setupSwagger(app: INestApplication) {
     .addServer(process.env.VERCEL_LOCAL_SERVER_ADDRESS)
     .addTag('status', 'Конечная точка проверки состояния сервера')
     .addTag('auth', 'Конечная точка для операций авторизации')
+    .addTag('task', 'Конечная точка для операций с задачей')
     .addTag('user', 'Конечная точка для операций с пользователем')
+    .addTag('tags', 'Конечная точка для операций с тегами')
     .addTag('upload', 'Конечная точка для операций с загрузкой файлов')
     .build();
 

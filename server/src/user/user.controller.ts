@@ -13,8 +13,7 @@ import {
   Res,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
-import { UserResponseDto } from './dto';
+import { UserResponseDto, UserProfileDto } from './dto';
 import { UserService } from './user.service';
 import {
   ApiBadRequestResponse,
@@ -29,13 +28,17 @@ import {
 import { CookiesEnum } from '../../config/enums/cookies.enum';
 import { JwtPayloadDto, ResponseErrorMessageDto } from '../../config/dto';
 import { Response } from 'express';
+import { MessageResponseDto } from '../auth/dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiOperation({ summary: 'Получить данные текущего авторизированного пользователя через accessToken ' })
+  @ApiOperation({
+    summary:
+      'Получить данные текущего авторизированного пользователя через accessToken ',
+  })
   @ApiOkResponse({
     status: HttpStatus.OK,
     type: JwtPayloadDto,
@@ -56,8 +59,9 @@ export class UserController {
     return user;
   }
 
-  @Public()
-  @ApiOperation({ summary: 'Получить пользователя по ID или электронной почте' })
+  @ApiOperation({
+    summary: 'Получить пользователя по ID или электронной почте',
+  })
   @ApiOkResponse({
     status: HttpStatus.OK,
     description: 'Ответ пользователя',
@@ -68,6 +72,7 @@ export class UserController {
     description: 'Неверный запрос',
     type: ResponseErrorMessageDto,
   })
+  @Public()
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':idOrEmail')
   async findOneUser(@Param('idOrEmail') idOrEmail: string) {
@@ -116,14 +121,14 @@ export class UserController {
     res.sendStatus(HttpStatus.OK);
   }
 
-  @ApiOperation({ summary: 'Обновление текущего пользователя' })
+  @ApiOperation({ summary: 'Обновление профиля текущего пользователя' })
   @ApiBody({
-    type: UserResponseDto,
+    type: UserProfileDto,
   })
   @ApiOkResponse({
     status: HttpStatus.OK,
-    description: 'Пользователь был успешно обновлен',
-    type: UserResponseDto,
+    description: 'Профиль пользователя был успешно обновлен',
+    type: MessageResponseDto,
   })
   @ApiUnauthorizedResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -143,16 +148,17 @@ export class UserController {
   @ApiCookieAuth(CookiesEnum.REFRESH_TOKEN)
   @UseInterceptors(ClassSerializerInterceptor)
   @Put()
-  async updateUser(
-    @Body() body: Partial<User>,
+  async updateUserProfile(
+    @Body() body: UserProfileDto,
     @CurrentUser() currentUser: JwtPayloadDto,
+    @Res() res: Response,
   ) {
-    const user = await this.userService.update(body, currentUser);
+    const userProfile = await this.userService.updateProfile(body, currentUser);
 
-    if (!user) {
-      throw new BadRequestException('Не удалось обновить пользователя');
+    if (!userProfile) {
+      throw new BadRequestException('Не удалось обновить профиль пользователя');
     }
 
-    return new UserResponseDto(user);
+    res.sendStatus(HttpStatus.OK);
   }
 }
