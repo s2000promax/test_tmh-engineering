@@ -1,10 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
-
-export interface IUploadResponse {
-  url: string;
-}
+import { IUploadResponse } from '../../interfaces/http/file-upload.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +13,9 @@ export class FileUploadService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post(environment.apiUrl + '/upload', formData);
+    return this.http.post<IUploadResponse>(
+      environment.apiUrl + '/upload',
+      formData,
+    );
   }
 }

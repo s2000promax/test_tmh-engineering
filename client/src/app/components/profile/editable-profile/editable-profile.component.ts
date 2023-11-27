@@ -28,7 +28,6 @@ import { FileUploadService } from '../../../core/services/file-upload/file-uploa
   templateUrl: './editable-profile.component.html',
   styleUrls: ['./editable-profile.component.scss'],
   standalone: true,
-  // changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatCardModule,
@@ -93,9 +92,12 @@ export class EditableProfileComponent implements OnInit, OnDestroy {
       this.error = '';
       this.submitted = true;
 
+      const { fullName } = this.profileForm.getRawValue();
+
       const newProfile: IProfile = {
-        ...this.profileForm.getRawValue(),
         userId: this.userProfile.userId,
+        fullName,
+        avatar: this.userProfile.avatar,
       };
 
       this.editProfileSubscription = this.userService
@@ -105,9 +107,11 @@ export class EditableProfileComponent implements OnInit, OnDestroy {
             this.submitted = false;
             this.editMode = false;
 
+            const { fullName } = this.profileForm.getRawValue();
+
             this.userProfile = {
               ...this.userProfile,
-              ...this.profileForm.getRawValue(),
+              fullName,
             };
           },
           error: (err) => {
@@ -123,7 +127,7 @@ export class EditableProfileComponent implements OnInit, OnDestroy {
     if (element.files?.length) {
       this.fileUploadService.fileUpload(element.files[0]).subscribe({
         next: (response) => {
-          console.log(response);
+          this.userProfile.avatar = response.url;
         },
         error: (err) => {
           console.log('File', err);
