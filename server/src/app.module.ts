@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guargs/jwt-auth.guard';
 import { AwsS3Module } from './aws-s3/aws-s3.module';
 import { TagModule } from './tag/tag.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TagModule } from './tag/tag.module';
     PrismaModule,
     AwsS3Module,
     AuthModule,
+    TaskModule,
     UserModule,
     TagModule,
   ],
