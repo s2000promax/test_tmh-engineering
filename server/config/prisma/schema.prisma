@@ -19,6 +19,8 @@ model User {
   Token           Token[]
   isUserBlocked   Boolean    @default(false)
   isUserConfirmed Boolean    @default(false)
+  Task            Task[]
+  Profile         Profile[]
 
   @@map("users")
 }
@@ -31,6 +33,49 @@ model Token {
   userAgent String
 
   @@map("tokens")
+}
+
+model Task {
+  id          String        @id @default(uuid())
+  user        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
+  title       String
+  description String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  dueDate     DateTime
+  status      String
+  attachments String[]
+  tags        Tag[]
+  category    CategoryEnum?
+
+  @@map("tasks")
+}
+
+model Tag {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  Task   Task?   @relation(fields: [taskId], references: [id])
+  taskId String?
+
+  @@map("tags")
+}
+
+model Profile {
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String @id
+  fullName String
+  avatar   String
+
+  @@map("profile")
+}
+
+enum CategoryEnum {
+  DEVELOPMENT
+  PRODUCTION
+  TESTS
+  REPAIR
+  PURCHASE
 }
 
 enum RoleEnum {
