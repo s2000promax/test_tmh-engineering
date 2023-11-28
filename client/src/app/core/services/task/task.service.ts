@@ -15,14 +15,24 @@ export class TaskService {
   public taskList = new BehaviorSubject<ITask[]>([]);
   public taskList$ = this.taskList.asObservable();
 
+  public query_search: string = '';
+  public query_category: string = '';
+
   private readonly http = inject(HttpClient);
 
   public fetchTaskList() {
-    return this.http.get<ITask[]>(environment.apiUrl + '/task/list').pipe(
-      tap((response) => {
-        this.taskList.next(response);
-      }),
-    );
+    return this.http
+      .get<ITask[]>(environment.apiUrl + '/task/list', {
+        params: {
+          query_search: this.query_search,
+          query_category: this.query_category,
+        },
+      })
+      .pipe(
+        tap((response) => {
+          this.taskList.next(response);
+        }),
+      );
   }
 
   public fetchTaskById(id: string) {

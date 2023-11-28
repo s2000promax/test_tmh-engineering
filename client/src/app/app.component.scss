@@ -7,7 +7,7 @@
 }
 
 mat-sidenav-container {
-  height: 100%;
+  height: calc(100vh - 75px);
 }
 
 .nav-items-mobile {

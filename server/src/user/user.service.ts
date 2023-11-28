@@ -48,6 +48,12 @@ export class UserService {
           password: hashedPassword,
           provider: user?.provider,
           roles: ['USER'],
+          Profile: {
+            create: {
+              fullName: '',
+              avatar: '',
+            },
+          },
         },
       })
       .catch((e) => {
@@ -120,6 +126,14 @@ export class UserService {
         this.logger.error(e);
         return null;
       });
+  }
+
+  async findUserProfileById(id: string) {
+    return this.prismaService.profile.findFirst({
+      where: {
+        userId: id,
+      },
+    });
   }
 
   async updateProfile(

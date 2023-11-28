@@ -1,6 +1,21 @@
 <mat-card>
-  <mat-card-title>Редактировать задачу</mat-card-title>
-  <mat-card-content>
+  <mat-card-title>Информация о задаче</mat-card-title>
+  <mat-card-content *ngIf="!editMode">
+    <div *ngIf="formData?.title">
+      <p>{{ formData.title }}</p>
+      <p>{{ formData.description }}</p>
+      <p>Срок: {{ formData.dueDate | date }}</p>
+      <p>Статус: {{ formData.status }}</p>
+      <p>Категория: {{ formData.category || 'Не указана' }}</p>
+      <p>Файлы: <a *ngIf="formData.attachments.length" href="{{formData.attachments[0]}}"
+                   target="_blank">Скачать</a> {{!formData.attachments.length ? 'Нет прикрепленных файлов' : ''}}</p>
+    </div>
+    <div *ngIf="isOwnerTask || (userService.isCurrentUserAdmin | async)">
+      <button mat-raised-button [color]="defaultColor" (click)="onEditToggle()">Редактировать</button>
+      <button mat-raised-button [color]="warnColor" (click)="onDeleteTask()">Удалить</button>
+    </div>
+  </mat-card-content>
+  <mat-card-content *ngIf="editMode">
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
       <mat-error *ngIf="!!error">
         {{ error }}
@@ -15,7 +30,8 @@
 
       <mat-form-field>
         <mat-label>Описание задачи</mat-label>
-        <textarea matInput placeholder="Введите описание задачи" formControlName="description" name="description" required></textarea>
+        <textarea matInput placeholder="Введите описание задачи" formControlName="description" name="description"
+                  required></textarea>
         <mat-error>
           Пожалуйста, введите описание задачи
         </mat-error>
@@ -35,7 +51,8 @@
 
       <app-status-select></app-status-select>
 
-      <button mat-raised-button [color]="defaultColor" [disabled]="!taskForm.valid || submitted">Обновить задачу</button>
+      <button mat-raised-button [color]="defaultColor" [disabled]="!taskForm.valid || submitted">Обновить задачу
+      </button>
     </form>
     <mat-progress-bar *ngIf="submitted" mode="buffer"></mat-progress-bar>
   </mat-card-content>

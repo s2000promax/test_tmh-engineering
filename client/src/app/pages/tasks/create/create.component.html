@@ -15,7 +15,8 @@
 
       <mat-form-field>
         <mat-label>Описание задачи</mat-label>
-        <textarea matInput placeholder="Введите описание задачи" formControlName="description" name="description" required></textarea>
+        <textarea matInput placeholder="Введите описание задачи" formControlName="description" name="description"
+                  required></textarea>
         <mat-error>
           Пожалуйста, введите описание задачи
         </mat-error>
@@ -36,6 +37,12 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <div (click)="fileInput.click()" class="attach">
+        <mat-icon>attach_file</mat-icon>
+        <span>[{{ attachedFileName }}]</span>
+      </div>
+      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
 
 
       <button mat-raised-button [color]="defaultColor" [disabled]="!taskForm.valid || submitted">Создать задачу</button>

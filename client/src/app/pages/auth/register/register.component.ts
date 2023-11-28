@@ -8,20 +8,17 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ThemePalette } from '@angular/material/core';
 import { BaseForm } from '../../../core/interfaces/forms/base-form.interface';
-import { IUser } from '../../../core/interfaces/user/user.inteface';
 import { emailValidator } from '../../../core/validators/email.validator';
 import { IRegisterForm } from '../../../core/interfaces/forms/register-form.interface';
 import { Subscription, switchMap } from 'rxjs';
@@ -88,7 +85,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
             this.userService.setCurrentUserData(user);
 
-            this.router.navigate(['profile']);
+            this.router.navigate(['profile', 'default']);
           },
           error: (err) => {
             this.submitted = false;

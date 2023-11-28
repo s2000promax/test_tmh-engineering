@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
   OnDestroy,
@@ -33,6 +34,8 @@ import { CategorySelectComponent } from '../../../components/selects/category-se
 import { MatSelectModule } from '@angular/material/select';
 import { ISelectForm } from '../../../core/interfaces/forms/select-form.interface';
 import { CategoryEnum } from '../../../core/enums/category.enum';
+import { MatIconModule } from '@angular/material/icon';
+import { FileUploadService } from '../../../core/services/file-upload/file-upload.service';
 
 @Component({
   selector: 'app-create',
@@ -54,6 +57,7 @@ import { CategoryEnum } from '../../../core/enums/category.enum';
     MatOptionModule,
     MatSelectModule,
     NgForOf,
+    MatIconModule,
   ],
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
@@ -63,6 +67,8 @@ export class CreateComponent implements OnInit, OnDestroy {
   public readonly defaultColor: ThemePalette | undefined = 'primary';
 
   public taskForm!: FormGroup;
+  public attachedFileName: string = '';
+  private attached: string[] = [];
 
   public submitted: boolean = false;
   public error: string = '';
@@ -74,11 +80,14 @@ export class CreateComponent implements OnInit, OnDestroy {
   );
 
   private taskSubscription!: Subscription;
+  private uploadFileSubscription!: Subscription;
 
   private readonly fb = inject(FormBuilder);
   private readonly taskService = inject(TaskService);
   private readonly userService = inject(UserService);
+  private readonly fileUploadService = inject(FileUploadService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.taskForm = this.fb.group({
@@ -97,6 +106,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       const data: Partial<ITask> = {
         ...this.taskForm.getRawValue(),
         status: StatusEnum.NEW,
+        attachments: this.attached,
         ownerId: this.userService.currentUser.value?.id,
       };
 
@@ -115,9 +125,35 @@ export class CreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  public onFileSelected(event: Event) {
+    const element = event.currentTarget as HTMLInputElement;
+
+    if (element.files?.length) {
+      this.uploadFileSubscription = this.fileUploadService
+        .fileUpload(element.files[0])
+        .subscribe({
+          next: (response) => {
+            this.attached.push(response.url);
+
+            this.attachedFileName = element.files?.length
+              ? element.files[0].name
+              : '';
+            this.cdr.markForCheck();
+          },
+          error: (err) => {
+            console.log('File', err);
+          },
+        });
+    }
+  }
+
   ngOnDestroy() {
     if (this.taskSubscription) {
       this.taskSubscription.unsubscribe();
+    }
+
+    if (this.uploadFileSubscription) {
+      this.uploadFileSubscription.unsubscribe();
     }
   }
 }

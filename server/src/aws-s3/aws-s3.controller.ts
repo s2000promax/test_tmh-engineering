@@ -1,30 +1,39 @@
-import { BadRequestException, Controller, HttpStatus, Post, Res, UploadedFile, UseInterceptors, } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  HttpStatus,
+  Post,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsS3Service } from './aws-s3.service';
 import { MulterFileDto } from './dto/multerFile.dto';
 import {
-  ApiBadRequestResponse, ApiBody, ApiCookieAuth,
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOperation,
   ApiPayloadTooLargeResponse,
   ApiTags,
-  ApiUnauthorizedResponse
-} from "@nestjs/swagger";
-import { Response } from "express";
-import { ResponseErrorMessageDto } from "../../config/dto";
-import { UrlResponseDto } from "./dto/url-response.dto";
-import { CookiesEnum } from "../../config/enums/cookies.enum";
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { Response } from 'express';
+import { ResponseErrorMessageDto } from '../../config/dto';
+import { UrlResponseDto } from './dto/url-response.dto';
+import { CookiesEnum } from '../../config/enums/cookies.enum';
 
 @ApiTags('upload')
 @Controller('upload')
 export class AwsS3Controller {
-  constructor(private awsS3Service: AwsS3Service) {
-  }
+  constructor(private awsS3Service: AwsS3Service) {}
 
-  @ApiOperation({summary: 'Загрузка файлов на сервер'})
+  @ApiOperation({ summary: 'Загрузка файлов на сервер' })
   @ApiCookieAuth(CookiesEnum.REFRESH_TOKEN)
   @ApiBody({
-    type: MulterFileDto
+    type: MulterFileDto,
   })
   @ApiCreatedResponse({
     status: HttpStatus.CREATED,
@@ -48,19 +57,13 @@ export class AwsS3Controller {
   })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(
-    @UploadedFile() file: MulterFileDto,
-    @Res() res: Response
-  ) {
-
+  async uploadFile(@UploadedFile() file: MulterFileDto, @Res() res: Response) {
+    console.log(file);
     const url = await this.awsS3Service.uploadFile(file);
     if (!url) {
       throw new BadRequestException('Не удалось загрузить файл на сервер');
     }
 
-    res
-      .status(HttpStatus.CREATED)
-      .json({url})
-      .send();
+    res.status(HttpStatus.CREATED).json({ url }).send();
   }
 }

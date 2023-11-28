@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +19,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatNativeDateModule, ThemePalette } from '@angular/material/core';
 import { Subscription } from 'rxjs';
 import { TaskService } from '../../../core/services/task/task.service';
@@ -43,6 +44,8 @@ import { StatusSelectComponent } from '../../../components/selects/status-select
     MatDatepickerModule,
     MatNativeDateModule,
     StatusSelectComponent,
+    DatePipe,
+    AsyncPipe,
   ],
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
@@ -50,26 +53,61 @@ import { StatusSelectComponent } from '../../../components/selects/status-select
 })
 export class EditComponent implements OnInit, OnDestroy {
   public readonly defaultColor: ThemePalette | undefined = 'primary';
+  public readonly warnColor: ThemePalette | undefined = 'warn';
+  public editMode: boolean = false;
+  public isOwnerTask: boolean = false;
 
   public taskForm!: FormGroup;
-  private data!: ITask;
+  public formData!: ITask;
 
   public submitted: boolean = false;
   public error: string = '';
 
-  private taskSubscription!: Subscription;
+  private taskUpdateSubscription!: Subscription;
+  private taskDeleteSubscription!: Subscription;
 
   private readonly fb = inject(FormBuilder);
   private readonly taskService = inject(TaskService);
-  private readonly userService = inject(UserService);
+  public readonly userService = inject(UserService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
+    const { id } = this.route.snapshot.params;
+    this.taskService.fetchTaskById(id).subscribe({
+      next: (response) => {
+        this.formData = {
+          ...response,
+        };
+
+        if (response.ownerId === this.userService.currentUser.value?.id) {
+          this.isOwnerTask = true;
+        }
+        this.cdr.markForCheck();
+      },
+      error: () => {},
+    });
+  }
+
+  public onEditToggle() {
+    this.editMode = true;
+
     this.taskForm = this.fb.group({
-      title: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      dueDate: [new Date(), [Validators.required]],
-      category: ['', []],
+      title: [this.formData.title, [Validators.required]],
+      description: [this.formData.description, [Validators.required]],
+      dueDate: [new Date(this.formData.dueDate), [Validators.required]],
+      category: [this.formData.category, []],
+    });
+  }
+
+  public onDeleteTask() {
+    const { id } = this.route.snapshot.params;
+
+    this.taskDeleteSubscription = this.taskService.deleteTask(id).subscribe({
+      next: () => {
+        this.router.navigate(['tasks', 'list']);
+      },
     });
   }
 
@@ -79,28 +117,34 @@ export class EditComponent implements OnInit, OnDestroy {
       this.submitted = true;
 
       const data: ITask = {
+        ...this.formData,
         ...this.taskForm.getRawValue(),
-        ownerId: this.userService.currentUser.value?.id,
       };
 
-      this.taskSubscription = this.taskService.updateTask(data).subscribe({
-        next: () => {
-          this.taskForm.reset();
-          this.submitted = false;
+      this.taskUpdateSubscription = this.taskService
+        .updateTask(data)
+        .subscribe({
+          next: () => {
+            this.taskForm.reset();
+            this.submitted = false;
 
-          this.router.navigate(['tasks', 'list']);
-        },
-        error: (err) => {
-          this.submitted = false;
-          this.error = err.error.message;
-        },
-      });
+            this.router.navigate(['tasks', 'list']);
+          },
+          error: (err) => {
+            this.submitted = false;
+            this.error = err.error.message;
+          },
+        });
     }
   }
 
   ngOnDestroy() {
-    if (this.taskSubscription) {
-      this.taskSubscription.unsubscribe();
+    if (this.taskUpdateSubscription) {
+      this.taskUpdateSubscription.unsubscribe();
+    }
+
+    if (this.taskDeleteSubscription) {
+      this.taskDeleteSubscription.unsubscribe();
     }
   }
 }

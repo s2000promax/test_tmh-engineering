@@ -8,8 +8,10 @@
   flex: 1;
 }
 
-.avatar-wrapper {
-
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
 }
 
 @media (max-width: 768px) {
