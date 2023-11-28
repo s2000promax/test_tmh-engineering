@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { RoleEnum, Task } from '@prisma/client';
+import { CategoryEnum, RoleEnum, Task } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { JwtPayloadDto } from '../../config/dto';
@@ -10,8 +10,39 @@ export class TaskService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findAllTasks(): Promise<Task[]> {
+  async findAllTasks(search: string, category: string): Promise<Task[]> {
+    const searchConditions: any = {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          description: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          status: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ],
+    };
+
+    if (
+      category &&
+      Object.values(CategoryEnum).includes(category as CategoryEnum)
+    ) {
+      searchConditions.category = { equals: category };
+    }
+
     const tasks = await this.prismaService.task.findMany({
+      where: searchConditions,
       include: {
         user: {
           include: {

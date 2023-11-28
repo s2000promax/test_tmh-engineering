@@ -1,8 +1,11 @@
 <mat-form-field [formGroup]="categorySelectForm">
-    <mat-label>Категория</mat-label>
-    <mat-select formControlName="category">
-      <mat-option *ngFor="let category of categories" [value]="category.value">
-        {{ category.viewValue }}
-      </mat-option>
-    </mat-select>
+  <mat-label>Категория</mat-label>
+  <mat-select formControlName="category" (selectionChange)="onCategoryChange($event)">
+    <mat-option *ngFor="let category of categories" [value]="category.value">
+      {{ category.viewValue }}
+    </mat-option>
+  </mat-select>
 </mat-form-field>
+<button mat-icon-button (click)="clearSelection()" aria-label="Очистить выбор">
+  <mat-icon>clear</mat-icon>
+</button>

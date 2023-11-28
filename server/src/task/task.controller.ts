@@ -11,6 +11,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Res,
   UseInterceptors,
 } from '@nestjs/common';
@@ -54,8 +55,11 @@ export class TaskController {
   })
   @Public()
   @Get('list')
-  async findAllTasks() {
-    const tasks = await this.taskService.findAllTasks();
+  async findAllTasks(
+    @Query('query_search') search: string,
+    @Query('query_category') category: string,
+  ) {
+    const tasks = await this.taskService.findAllTasks(search, category);
 
     return tasks;
   }
