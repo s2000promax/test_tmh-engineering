@@ -2,7 +2,7 @@
 https://tmh-engineering.netlify.app
 
 ### Видео-демонстрация работы приложения:
-https://drive.google.com/file/d/1X1KQjLmP6XYzmmbGFgPoDEkMG9C2TqY0/view?usp=sharing
+[![Watch the video](https://github.com/s2000promax/test_tmh-engineering/assets/16530319/bb71a3fe-94ed-4f5b-bcca-b1e24d57661a)](https://drive.google.com/file/d/1X1KQjLmP6XYzmmbGFgPoDEkMG9C2TqY0/view?usp=sharing)
 
 ## Сборка проекта
   npm install
@@ -37,4 +37,6 @@ https://drive.google.com/file/d/1X1KQjLmP6XYzmmbGFgPoDEkMG9C2TqY0/view?usp=shari
 Добавлена документация серверного API. 
 (Деплой в режиме development от ветки dev). 
 Доступно по ссылке: https://tmh-engineering-dev-server.vercel.app/api-docs
+
+![image](https://github.com/s2000promax/test_tmh-engineering/assets/16530319/3506c448-e200-4086-aef8-3f99e7552850)
 
