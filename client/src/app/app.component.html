@@ -5,12 +5,13 @@
   <span>Менеджер задач</span>
   <span class="spacer"></span>
   <div class="nav-items" *ngIf="!(isHandset$ | async) && !(userService.isAuthenticated$ | async)">
-    <a mat-button routerLink="/auth/login">Login</a>
+    <a mat-button routerLink="/tasks/list">Задачи</a>
+    <a mat-button routerLink="/auth/login">Войти</a>
   </div>
   <div class="nav-items" *ngIf="!(isHandset$ | async) && (userService.isAuthenticated$ | async)">
-    <a mat-button routerLink="/tasks/list">Tasks</a>
-    <a mat-button routerLink="/profile/default">Profile</a>
-    <a mat-button (click)="onLogout()">Logout</a>
+    <a mat-button routerLink="/tasks/list">Задачи</a>
+    <a mat-button routerLink="/profile/default">Профиль</a>
+    <a mat-button (click)="onLogout()">Выйти</a>
   </div>
 </mat-toolbar>
 
@@ -18,17 +19,17 @@
   <mat-sidenav #sidenav *ngIf="(isHandset$ | async) && !(userService.isAuthenticated$ | async)">
     <mat-nav-list>
       <div class="nav-items-mobile">
-        <a mat-button routerLink="/tasks/list">Tasks</a>
-        <a mat-button routerLink="/auth/login">Login</a>
+        <a mat-button routerLink="/tasks/list">Задачи</a>
+        <a mat-button routerLink="/auth/login">Войти</a>
       </div>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav #sidenav *ngIf="(isHandset$ | async) && (userService.isAuthenticated$ | async)">
     <mat-nav-list>
       <div class="nav-items-mobile">
-        <a mat-button routerLink="/tasks/list">Tasks</a>
-        <a mat-button routerLink="/profile/default">Profile</a>
-        <a mat-button (click)="onLogout()">Logout</a>
+        <a mat-button routerLink="/tasks/list">Задачи</a>
+        <a mat-button routerLink="/profile/default">Профиль</a>
+        <a mat-button (click)="onLogout()">Выйти</a>
       </div>
     </mat-nav-list>
   </mat-sidenav>

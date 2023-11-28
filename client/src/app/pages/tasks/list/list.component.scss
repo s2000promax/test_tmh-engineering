@@ -1,0 +1,28 @@
+.scroll-container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+mat-card {
+  cursor: pointer;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+}
+
+mat-card-footer {
+  padding: 1em;
+  background-color: #f0f0f0;
+
+  .footer-content {
+    gap: 1em;
+  }
+}

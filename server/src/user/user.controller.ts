@@ -60,12 +60,11 @@ export class UserController {
   }
 
   @ApiOperation({
-    summary: 'Получить пользователя по ID или электронной почте',
+    summary: 'Получить профиль пользователя по ID',
   })
   @ApiOkResponse({
     status: HttpStatus.OK,
-    description: 'Ответ пользователя',
-    type: UserResponseDto,
+    type: UserProfileDto,
   })
   @ApiBadRequestResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -73,16 +72,15 @@ export class UserController {
     type: ResponseErrorMessageDto,
   })
   @Public()
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Get(':idOrEmail')
-  async findOneUser(@Param('idOrEmail') idOrEmail: string) {
-    const user = await this.userService.findOne(idOrEmail);
+  @Get(':id')
+  async findUserProfileById(@Param('id') id: string) {
+    const userProfile = await this.userService.findUserProfileById(id);
 
-    if (!user) {
-      throw new BadRequestException('Пользователь не найден');
+    if (!userProfile) {
+      throw new BadRequestException('Профиль пользователя не найден');
     }
 
-    return new UserResponseDto(user);
+    return userProfile;
   }
 
   @ApiOperation({ summary: 'Удалить пользователя по ID' })
@@ -118,7 +116,7 @@ export class UserController {
       throw new BadRequestException('Не удалось удалить пользователя');
     }
 
-    res.sendStatus(HttpStatus.OK);
+    res.status(HttpStatus.OK).json({ message: 'Пользователь успешно удален' });
   }
 
   @ApiOperation({ summary: 'Обновление профиля текущего пользователя' })
@@ -159,6 +157,8 @@ export class UserController {
       throw new BadRequestException('Не удалось обновить профиль пользователя');
     }
 
-    res.sendStatus(HttpStatus.OK);
+    res
+      .status(HttpStatus.OK)
+      .json({ message: 'Профиль пользователя успешно обновлен' });
   }
 }

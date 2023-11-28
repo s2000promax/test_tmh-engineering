@@ -1,9 +1,9 @@
 import { Injectable, Injector } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
   HttpEvent,
+  HttpHandler,
   HttpInterceptor,
+  HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
@@ -23,8 +23,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     request = request.clone({
       setHeaders: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
         Authorization: this.authService.getAccessToken() ?? '',
       },
     });

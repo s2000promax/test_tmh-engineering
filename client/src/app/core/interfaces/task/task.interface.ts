@@ -1,5 +1,6 @@
 import { StatusEnum } from '../../enums/status.enum';
 import { CategoryEnum } from '../../enums/category.enum';
+import { IProfile } from '../user/user.inteface';
 
 export interface Tag {
   id: string;
@@ -18,6 +19,7 @@ export interface ITask {
   attachments: string[];
   tags: Tag[];
   category: CategoryEnum | null;
+  ownerProfile: IProfile;
 }
 
 export interface ITaskRequest extends Partial<ITask> {}
