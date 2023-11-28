@@ -7,6 +7,8 @@
       <p>Срок: {{ formData.dueDate | date }}</p>
       <p>Статус: {{ formData.status }}</p>
       <p>Категория: {{ formData.category || 'Не указана' }}</p>
+      <p>Файлы: <a *ngIf="formData.attachments.length" href="{{formData.attachments[0]}}"
+                   target="_blank">Скачать</a> {{!formData.attachments.length ? 'Нет прикрепленных файлов' : ''}}</p>
     </div>
     <div *ngIf="isOwnerTask || (userService.isCurrentUserAdmin | async)">
       <button mat-raised-button [color]="defaultColor" (click)="onEditToggle()">Редактировать</button>

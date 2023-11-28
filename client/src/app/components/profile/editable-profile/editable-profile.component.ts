@@ -51,6 +51,7 @@ export class EditableProfileComponent implements OnInit, OnDestroy {
 
   private userProfileSubscription!: Subscription;
   private editProfileSubscription!: Subscription;
+  private uploadFileSubscription!: Subscription;
 
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
@@ -125,14 +126,16 @@ export class EditableProfileComponent implements OnInit, OnDestroy {
     const element = event.currentTarget as HTMLInputElement;
 
     if (element.files?.length) {
-      this.fileUploadService.fileUpload(element.files[0]).subscribe({
-        next: (response) => {
-          this.userProfile.avatar = response.url;
-        },
-        error: (err) => {
-          console.log('File', err);
-        },
-      });
+      this.uploadFileSubscription = this.fileUploadService
+        .fileUpload(element.files[0])
+        .subscribe({
+          next: (response) => {
+            this.userProfile.avatar = response.url;
+          },
+          error: (err) => {
+            console.log('File', err);
+          },
+        });
     }
   }
 
@@ -143,6 +146,10 @@ export class EditableProfileComponent implements OnInit, OnDestroy {
 
     if (this.editProfileSubscription) {
       this.editProfileSubscription.unsubscribe();
+    }
+
+    if (this.uploadFileSubscription) {
+      this.uploadFileSubscription.unsubscribe();
     }
   }
 }
